@@ -20,12 +20,26 @@ def get_projection(home_tempo: float, away_tempo: float, tempo_avg: float, home_
 
     proj_tempo = home_tempo + away_tempo - tempo_avg
     if neutral:
-        home_projection = (proj_tempo*((1.12 * 0.986 * home_oe) + (.88 * away_de) - ppp_avg))/100
-        away_projection = (proj_tempo*((1.12 * 0.986 * away_oe) + (.88 * home_de) - ppp_avg))/100
+        if (home_oe > ppp_avg and away_de < ppp_avg) or (home_oe < ppp_avg and away_de > ppp_avg):
+            home_projection = (proj_tempo*(2* (home_oe + away_de - ppp_avg) + home_oe)/3)/100
+        else:    
+            home_projection = proj_tempo*(home_oe + away_de - ppp_avg)/100
+
+        if (away_oe > ppp_avg and home_de < ppp_avg) or (away_oe < ppp_avg and home_de > ppp_avg):
+            away_projection = (proj_tempo * (2* (away_oe + home_de - ppp_avg) + away_oe)/3)/100
+        else:
+            away_projection = proj_tempo*(away_oe + home_de - ppp_avg)/100
         return (home_projection, away_projection)
-        
-    home_projection = (proj_tempo*((1.014 * 1.12 * home_oe) + (1.014 * .88 * away_de) - ppp_avg))/100
-    away_projection = (proj_tempo*((0.986  * 1.12 * away_oe) + (0.986 * .88 * home_de) - ppp_avg))/100
+
+    if (home_oe > ppp_avg and away_de < pppp_avg) or (home_oe < ppp_avg and away_de > ppp_avg):
+        home_projection = (proj_tempo*(2* (1.014*home_oe + 1.014*away_de - ppp_avg) + 1.014*home_oe)/3)/100
+    else:
+        home_projection = proj_tempo*(1.014*home_oe + 1.014*away_de - ppp_avg)/100
+
+    if (away_oe > ppp_avg and home_de < pppp_avg) or (away_oe < ppp_avg and home_de > ppp_avg):
+        away_projection = (proj_tempo * (2* (.986*away_oe + .986*home_de - ppp_avg) + .986*away_oe)/3)/100
+    else:
+        away_projection = proj_tempo*(.986*away_oe + .986*home_de - ppp_avg)/100
     return (home_projection, away_projection)
 
 def get_game_t(tempo: float, oppontent_tempo: float, tempo_avg: float, possessions: float):
